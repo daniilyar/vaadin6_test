@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID" version="3.0">
+  <display-name>vaadin-webapp</display-name>
+  <context-param>
+  	<description>
+  	Vaadin production mode</description>
+  	<param-name>productionMode</param-name>
+  	<param-value>false</param-value>
+  </context-param>
+  <servlet>
+  	<servlet-name>Vaadin_webapp Application</servlet-name>
+  	<servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
+  	<init-param>
+  		<description>
+  		Vaadin application class to start</description>
+  		<param-name>application</param-name>
+  		<param-value>com.example.vaadin.webapp.Activator</param-value>
+  	</init-param>
+  	<init-param>
+  		<description>
+  		Application widgetset</description>
+  		<param-name>widgetset</param-name>
+  		<param-value>com.example.vaadin.webapp.widgetset.Vaadin_webappWidgetset</param-value>
+  	</init-param>
+  </servlet>
+  <servlet-mapping>
+  	<servlet-name>Vaadin_webapp Application</servlet-name>
+  	<url-pattern>/*</url-pattern>
+  </servlet-mapping>
+  <welcome-file-list>
+    <welcome-file>index.html</welcome-file>
+    <welcome-file>index.htm</welcome-file>
+    <welcome-file>index.jsp</welcome-file>
+    <welcome-file>default.html</welcome-file>
+    <welcome-file>default.htm</welcome-file>
+    <welcome-file>default.jsp</welcome-file>
+  </welcome-file-list>
+
+	<servlet>
+		<servlet-name>MessAdminServlet</servlet-name>
+		<servlet-class>clime.messadmin.admin.MessAdminServlet</servlet-class>
+		<!-- Uncomment if you want to password-protect access to the administration 
+			servlet <init-param> <param-name>AuthorizationPassword</param-name> <param-value>[SomePassword]</param-value> 
+			</init-param> -->
+		<load-on-startup>-1</load-on-startup>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>MessAdminServlet</servlet-name>
+		<url-pattern>/messadmin</url-pattern><!-- You can change this pattern! -->
+	</servlet-mapping>
+  
+</web-app>

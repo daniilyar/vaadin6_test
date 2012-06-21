@@ -1,0 +1,4 @@
+target
+WebContent/WEB-INF/lib
+.settings/
+.checkstyle

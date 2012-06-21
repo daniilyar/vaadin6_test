@@ -1,0 +1,2 @@
+# Module com.example.vaadin.webapp.widgetset.Vaadin_webappWidgetset
+# RPC service class, partial path of RPC policy file

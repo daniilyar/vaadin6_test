@@ -1,0 +1,342 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>vaadin-webapp</groupId>
+  <artifactId>vaadin-webapp</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>war</packaging>
+  <name>vaadin test</name>
+  <description>Sample Vaadin project</description>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <vaadin.version>6.7.1</vaadin.version>
+    <gwt.version>2.3.0</gwt.version>
+    <gwt.plugin.version>2.2.0</gwt.plugin.version>
+  </properties>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>2.5.1</version>
+        <configuration>
+          <source>1.5</source>
+          <target>1.5</target>
+        </configuration>
+      </plugin>
+
+	<!-- Is used to compile custom GWT components or widget dependencies with 
+		the GWT compiler. To compile application client-side widget set to JavaScript use
+		'mvn gwt:compile' + 'mvn vaadin:update-widgetset'. -->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>gwt-maven-plugin</artifactId>
+        <version>${gwt.plugin.version}</version>
+        <configuration>
+          <webappDirectory>${project.build.directory}/${project.build.finalName}/VAADIN/widgetsets</webappDirectory>
+          <extraJvmArgs>-Xmx512M -Xss1024k</extraJvmArgs>
+          <runTarget>vaadin-test</runTarget>
+          <hostedWebapp>${project.build.directory}/${project.build.finalName}</hostedWebapp>
+          <noServer>true</noServer>
+          <port>8080</port>
+          <compileReport>false</compileReport>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>resources</goal>
+              <goal>compile</goal>
+            </goals>
+          </execution>
+        </executions>
+        <dependencies>
+          <dependency>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-dev</artifactId>
+            <version>${gwt.version}</version>
+          </dependency>
+          <dependency>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-user</artifactId>
+            <version>${gwt.version}</version>
+          </dependency>
+        </dependencies>
+      </plugin>
+      <plugin>
+        <groupId>com.vaadin</groupId>
+        <artifactId>vaadin-maven-plugin</artifactId>
+        <version>1.0.2</version>
+        <executions>
+          <execution>
+            <configuration>
+            </configuration>
+            <goals>
+              <goal>update-widgetset</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+  <!-- Simple Jetty test server at 'http://localhost:55556/${project.name}'. Can 
+    be launched with Maven goal 'jetty:run' and stopped with 'jetty:stop' -->
+      <plugin>
+        <groupId>org.mortbay.jetty</groupId>
+        <artifactId>maven-jetty-plugin</artifactId>
+        <version>6.1.26</version>
+        <configuration>
+          <webAppSourceDirectory>src</webAppSourceDirectory>
+          <!-- <webDefaultXml>WebContent/WEB-INF/web.xml</webDefaultXml> -->
+          <systemProperties>
+            <systemProperty>
+              <name>jetty.port</name>
+              <value>55556</value>
+            </systemProperty>
+          </systemProperties>
+
+          <stopPort>9966</stopPort>
+          <stopKey>vaadin-webapp</stopKey>
+          <!-- Redeploy application every x seconds if changes are detected, 0 to switch OFF automatic 
+            redeployment -->
+          <scanIntervalSeconds>10</scanIntervalSeconds>
+          <!-- make sure Jetty also finds the widgetset -->
+          <webAppConfig>
+            <contextPath>/vaadin-webapp</contextPath>
+            <baseResource implementation="org.mortbay.resource.ResourceCollection">
+              <!-- Workaround for Maven/Jetty issue http://jira.codehaus.org/browse/JETTY-680 -->
+              <!-- <resources>src/main/webapp,${project.build.directory}/${project.build.finalName}</resources> -->
+              <resourcesAsCSV>WebContent,${project.build.directory}/${project.build.finalName}</resourcesAsCSV>
+            </baseResource>
+            <tempDirectory>${project.build.directory}/work</tempDirectory>            
+            <defaultsDescriptor>WebContent/WEB-INF/web.xml</defaultsDescriptor>
+            <!-- <overrideDescriptor>WebContent/WEB-INF/override-web.xml</overrideDescriptor> -->
+          </webAppConfig>
+        </configuration>
+      </plugin>
+
+	<!-- Simple Tomcat test server at 'http://localhost:55555/WebContent'. Can 
+		be launched with Maven goal 'tomcat:run' and stopped with 'tomcat:stop' -->
+<!-- <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>tomcat-maven-plugin</artifactId>
+        <version>1.2-SNAPSHOT</version>
+        <configuration>
+          <warSourceDirectory>${project.build.directory}/${project.build.finalName}</warSourceDirectory>
+          <docBase>/WebContent</docBase>          
+          <url>http://localhost:55555/</url>
+          <port>55555</port>
+          <path>/WebContent</path>
+        </configuration>
+      </plugin> -->
+      
+    </plugins>
+
+    <pluginManagement>
+      <plugins>
+
+        <plugin>
+          <groupId>org.eclipse.m2e</groupId>
+          <artifactId>lifecycle-mapping</artifactId>
+          <version>1.0.0</version>
+          <configuration>
+            <lifecycleMappingMetadata>
+              <pluginExecutions>
+              
+                <pluginExecution>
+                  <pluginExecutionFilter>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>gwt-maven-plugin</artifactId>
+                    <versionRange>[2.4.0,)</versionRange>
+                    <goals>
+                      <goal>resources</goal>
+                      <goal>compile</goal>
+                      <goal>i18n</goal>
+                    </goals>
+                  </pluginExecutionFilter>
+                  <action>
+                    <execute />
+                  </action>                  
+                </pluginExecution>
+
+                <pluginExecution>
+                  <pluginExecutionFilter>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-war-plugin</artifactId>
+                    <versionRange>[2.1.1,)</versionRange>
+                    <goals>
+                      <goal>exploded</goal>
+                    </goals>
+                  </pluginExecutionFilter>
+                  <action>
+                    <execute />
+                  </action>
+                </pluginExecution>
+
+                <pluginExecution>
+                  <pluginExecutionFilter>
+                    <groupId>com.vaadin</groupId>
+                    <artifactId>
+                      vaadin-maven-plugin
+                    </artifactId>
+                    <versionRange>[1.0.2,)</versionRange>
+                    <goals>
+                      <goal>update-widgetset</goal>
+                    </goals>
+                  </pluginExecutionFilter>
+                  <action>
+                    <ignore></ignore>
+                  </action>
+                </pluginExecution>
+
+                <pluginExecution>
+                  <pluginExecutionFilter>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>gwt-maven-plugin</artifactId>
+                    <versionRange>[2.2.0,)</versionRange>
+                    <goals>
+                      <goal>resources</goal>
+                    </goals>
+                  </pluginExecutionFilter>
+                  <action>
+                    <ignore></ignore>
+                  </action>
+                </pluginExecution>
+
+              </pluginExecutions>
+            </lifecycleMappingMetadata>
+          </configuration>
+        </plugin>
+
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-war-plugin</artifactId>
+          <version>2.2</version>
+          <configuration>
+            <webappDirectory>WebContent</webappDirectory>
+          </configuration>
+        </plugin>
+
+      </plugins>
+    </pluginManagement>
+  </build>
+
+  <repositories>
+    <repository>
+      <id>vaadin-snapshots</id>
+      <url>http://oss.sonatype.org/content/repositories/vaadin-snapshots/</url>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </repository>
+    <repository>
+      <id>vaadin-addons</id>
+      <url>http://maven.vaadin.com/vaadin-addons</url>
+    </repository>
+    <!-- MessAdmin repository -->
+    <repository>
+      <id>MessAdmin</id>
+      <url>http://messadmin.sourceforge.net/maven2/</url>
+    </repository>
+  </repositories>
+
+  <pluginRepositories>
+    <pluginRepository>
+      <id>codehaus-snapshots</id>
+      <url>http://nexus.codehaus.org/snapshots</url>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+    </pluginRepository>
+    <pluginRepository>
+      <id>vaadin-snapshots</id>
+      <url>http://oss.sonatype.org/content/repositories/vaadin-snapshots/</url>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+    </pluginRepository>
+  </pluginRepositories>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.vaadin</groupId>
+      <artifactId>vaadin</artifactId>
+      <version>${vaadin.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.gwt</groupId>
+      <artifactId>gwt-user</artifactId>
+      <version>${gwt.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>javax.validation</groupId>
+      <artifactId>validation-api</artifactId>
+      <version>1.0.0.GA</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>javax.validation</groupId>
+      <artifactId>validation-api</artifactId>
+      <version>1.0.0.GA</version>
+      <classifier>sources</classifier>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.wicket</groupId>
+      <artifactId>wicket-objectsizeof-agent</artifactId>
+      <version>1.5.7</version>
+    </dependency>
+
+    <dependency>
+      <groupId>net.sourceforge.javawebparts</groupId>
+      <artifactId>javawebparts-core</artifactId>
+      <version>1.0-beta4</version>
+    </dependency>
+
+    <dependency>
+      <groupId>net.sourceforge.javawebparts</groupId>
+      <artifactId>javawebparts-session</artifactId>
+      <version>1.0-beta4</version>
+    </dependency>
+
+    <!-- MessAdmin dependency -->
+    <dependency>
+      <groupId>net.sourceforge.messadmin</groupId>
+      <artifactId>MessAdmin-Core</artifactId>
+      <version>5.2</version>
+      <scope>runtime</scope>
+    </dependency>
+
+    <!-- Add-ons and custom components -->
+    <dependency>
+      <groupId>org.vaadin.addons</groupId>
+      <artifactId>dragdroplayouts</artifactId>
+      <version>0.8</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.vaadin.addons</groupId>
+      <artifactId>refresher</artifactId>
+      <version>1.1.1</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.vaadin.addons</groupId>
+      <artifactId>messagebox</artifactId>
+      <version>1.1.1</version>
+    </dependency>
+
+  </dependencies>
+
+</project>
