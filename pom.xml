@@ -26,7 +26,7 @@
           <target>1.5</target>
         </configuration>
       </plugin>
-
+     
 	<!-- Is used to compile custom GWT components or widget dependencies with 
 		the GWT compiler. To compile application client-side widget set to JavaScript use
 		'mvn gwt:compile' + 'mvn vaadin:update-widgetset'. -->
@@ -134,6 +134,29 @@
 
     <pluginManagement>
       <plugins>
+
+	<plugin>
+		<groupId>org.apache.maven.plugins</groupId>
+		<artifactId>maven-install-plugin</artifactId>
+		<version>2.3.1</version>
+		<configuration></configuration>
+		<executions>
+			<execution>
+				<id>1</id>
+				<phase>install</phase>
+				<goals>
+					<goal>gwt:compile</goal>
+				</goals>
+			</execution>
+			<execution>
+				<id>2</id>
+				<phase>install</phase>
+				<goals>
+					<goal>vaadin:update-widgetset</goal>
+				</goals>
+			</execution>
+		</executions>
+	</plugin>
 
         <plugin>
           <groupId>org.eclipse.m2e</groupId>
